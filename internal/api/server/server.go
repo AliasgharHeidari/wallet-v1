@@ -5,15 +5,20 @@ import (
 	"os"
 
 	"github.com/AliasgharHeidari/wallet-v1/internal/api/handler"
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v2"
+
+ 	"github.com/gofiber/fiber/v2/middleware/logger" 
 	"github.com/joho/godotenv"
 )
 
 func Start() {
 
 	app := fiber.New()
+	app.Use(logger.New())
 
 	app.Get("/wallet/:number", handler.GetWalletInfo)
+
+	app.Post("wallet/gift", handler.AddCredit)
 
 	err := godotenv.Load("./.env")
 	if err != nil {

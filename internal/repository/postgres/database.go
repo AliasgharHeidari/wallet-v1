@@ -1,12 +1,12 @@
 package postgres
 
 import (
-	"log"
-	"os"
 	"github.com/AliasgharHeidari/wallet-v1/internal/model"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log"
+	"os"
 )
 
 var (
@@ -37,4 +37,12 @@ func AutoMigrate() {
 
 func GetDB() *gorm.DB {
 	return DB
+}
+
+func GetWalletInfo(number int) (model.Wallet, error) {
+	var wallet model.Wallet
+	if err := DB.First(&wallet, number).Error; err != nil {
+		return model.Wallet{}, err
+	}
+	return wallet, nil
 }
