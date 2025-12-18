@@ -2,8 +2,6 @@ package onmemory
 
 import (
 	"log"
-	/* 	"math/rand/v2" */
-
 	"github.com/AliasgharHeidari/wallet-v1/internal/model"
 	"github.com/AliasgharHeidari/wallet-v1/internal/repository/postgres"
 )
@@ -15,7 +13,6 @@ func InitWallet() {
 
 	for i := 0; i < 100; i++ {
 		InitWal := model.Wallet{
-			/* 		MobileNumber: rand.IntN(99999999999)+ 99999999999, */
 			MobileNumber: 900000 + i,
 			Balance:      0,
 		}
