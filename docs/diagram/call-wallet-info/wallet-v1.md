@@ -5,7 +5,7 @@
 ## Description
 
 1. user call `WalletInfo` endpoint from the wallet component
-2. wallet component return response
+2. wallet component return response (user balance)
 
 ## wallet
 
