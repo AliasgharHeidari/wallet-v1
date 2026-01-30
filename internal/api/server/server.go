@@ -16,13 +16,21 @@ func Start() {
 	app := fiber.New()
 	app.Use(logger.New())
 
+	//create wallet account
+	app.Post("/wallet/create-account/:number",handler.CreateAccount)
+	
+	// get balance info
 	app.Get("/wallet/:number", handler.GetWalletInfo)
 
+	//get wallet transactions list
+	app.Get("/wallet/transactions/:number", handler.Transaction)
+
+	//apply giftCode to wallet (only used by giftcode service)
 	app.Post("wallet/gift", handler.AddCredit)
 
 	err := godotenv.Load("./.env")
 	if err != nil {
-		log.Fatalf("faild to load .env, error: ", err)
+		log.Fatal("faild to load .env, error: ", err)
 	}
 	port := os.Getenv("SERVER_PORT")
 

@@ -11,9 +11,9 @@ var wallet []model.Wallet
 func InitWallet() {
 	DB := postgres.GetDB()
 
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 10; i++ {
 		InitWal := model.Wallet{
-			MobileNumber: 900000 + i,
+			MobileNumber: 90000000 + i,
 			Balance:      0,
 		}
 		log.Println(i)

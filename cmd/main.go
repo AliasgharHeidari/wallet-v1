@@ -9,6 +9,7 @@ import (
 func main() {
 	postgres.InitDB()
 	postgres.AutoMigrate()
-/* 	onmemory.InitWallet() */
+	/* onmemory.InitWallet()  */
 	server.Start()
 }
+
