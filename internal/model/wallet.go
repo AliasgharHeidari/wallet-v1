@@ -5,7 +5,12 @@ import (
 )
 
 type Wallet struct {
-	MobileNumber int `json:"mobileNumber" gorm:"primarykey"`
-	Balance      int `json:"balace"`
-	UpdatedAt    time.Time
+	MobileNumber int `json:"mobile_number" gorm:"primarykey"`
+	Balance      float64    `json:"balace"`
+}
+
+type Transaction struct {
+	ID int `gorm:"primarykey:MobileNumber"`
+	Value        float64`json:"value"`
+	CreatedAt    time.Time
 }

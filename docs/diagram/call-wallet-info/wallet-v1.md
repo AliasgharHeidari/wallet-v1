@@ -4,8 +4,8 @@
 
 ## Description
 
-1. user call `WalletInfo` endpoint from the wallet component
-2. wallet component return response (user balance)
+1. user put phone number in request url and  call `WalletInfo` endpoint from the wallet component
+2. wallet component checks if account exist and return response (user balance)
 
 ## wallet
 
@@ -32,15 +32,14 @@ Errors:
       Name: internal server error
       Body:
          {
-            "error" : "internal server error",
+            "error" : "internal error, please try again later ",
          }
 Responses:
       - code: 200
         Name: accepted
         Body:
             {
-                "Balance" :          (int),
-                "lase transaction" : (time.Time),
+                "Balance" :          (int64),
             }
 
 ```

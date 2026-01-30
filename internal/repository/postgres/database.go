@@ -39,7 +39,7 @@ func GetDB() *gorm.DB {
 	return DB
 }
 
-func GetWalletInfo(number int) (model.Wallet, error) {
+func GetWalletInfo(number string) (model.Wallet, error) {
 	var wallet model.Wallet
 	if err := DB.First(&wallet, number).Error; err != nil {
 		return model.Wallet{}, err
