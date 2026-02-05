@@ -29,7 +29,7 @@ func CreateAccount(c *fiber.Ctx) error {
 	}
 
 	err = service.CreateAccount(Number)
-	if errors.Is(err, service.) {
+	if errors.Is(err, service.ErrDuplicatedKey) {
 		log.Println(err)
 		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
 			"error": "this ID is used by anoher account",

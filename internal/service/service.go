@@ -10,10 +10,9 @@ import (
 )
 
 var (
-	ErrNotFound      error
-	ErrInternal      error
- 	ErrDuplicatedKey string = "ErrDuplicatedKey"
-
+	ErrNotFound      = errors.New("ErrNotFound")
+	ErrInternal      = errors.New("ErrInternal")
+	ErrDuplicatedKey = errors.New("DuplicatedKey")
 )
 
 func GetWalletInfo(number string) (model.Wallet, error) {
@@ -55,8 +54,7 @@ func CreateAccount(number int) error {
 	}
 	log.Println(count)
 	if count > 0 {
-		errorKey := errors.New("DuplicatedKey")
-		return errorKey
+		return ErrDuplicatedKey
 	}
 
 	err := DB.Create(&newWal).Error
@@ -65,12 +63,5 @@ func CreateAccount(number int) error {
 		return err
 	}
 
-	/* 	err := DB.Create(&newWal).Error
-	   	if err != nil {
-	   		if errors.Is(err, gorm.ErrDuplicatedKey) {
-	   			return ErrDuplicatedKey
-	   		}
-	   		return err
-	   	} */
 	return nil
 }
