@@ -23,13 +23,17 @@ func InitDB() {
 
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatalf("failed to connect to database, error:", err)
+		log.Fatalln("failed to connect to database, error:", err)
 	}
 
 }
 
 func AutoMigrate() {
 	err := DB.AutoMigrate(&model.Wallet{})
+	if err != nil {
+		panic(err)
+	}
+	err = DB.AutoMigrate(&model.Transaction{})
 	if err != nil {
 		panic(err)
 	}

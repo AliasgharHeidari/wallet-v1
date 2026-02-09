@@ -6,7 +6,6 @@ import (
 
 	"github.com/AliasgharHeidari/wallet-v1/internal/model"
 	"github.com/AliasgharHeidari/wallet-v1/internal/repository/postgres"
-	"gorm.io/gorm"
 )
 
 var (
@@ -23,21 +22,41 @@ func GetWalletInfo(number string) (model.Wallet, error) {
 	return wallet, nil
 }
 
-func Transaction(number string) (model.Transaction, error) {
+func Transaction() ([]model.Transaction, error) {
 	DB := postgres.GetDB()
 
-	var tx model.Transaction
+	var tx []model.Transaction
 
-	err := DB.Where("phone_number = ?", number).First(&tx).Error
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return model.Transaction{}, ErrNotFound
-		} else {
-			return model.Transaction{}, ErrInternal
-		}
+	result := DB.Model(&model.Transaction{}).Find(&tx)
+
+	if result.Error != nil {
+		return []model.Transaction{}, ErrInternal
+	}
+
+	if result.RowsAffected == 0 {
+		return []model.Transaction{}, ErrNotFound
 	}
 
 	return tx, nil
+}
+
+func GetWalletList() ([]model.Wallet, error) {
+	DB := postgres.GetDB()
+
+	var Wallets []model.Wallet
+
+	result := DB.Model(&model.Wallet{}).Find(&Wallets)
+
+	if result.Error != nil {
+		return []model.Wallet{}, ErrInternal
+	}
+
+	if result.RowsAffected == 0 {
+		return []model.Wallet{}, ErrNotFound
+	}
+
+	return Wallets, nil
+
 }
 
 func CreateAccount(number int) error {
