@@ -16,6 +16,9 @@ func Start() {
 	app := fiber.New()
 	app.Use(logger.New())
 
+	//apply giftCode to wallet (only used by giftcode service)
+	app.Post("wallet/topup", handler.AddCredit)
+
 	//create wallet account
 	app.Post("/wallet/:number", handler.CreateAccount)
 
@@ -27,9 +30,6 @@ func Start() {
 
 	// get wallet info
 	app.Get("/wallet/:number", handler.GetWalletInfo)
-
-	//apply giftCode to wallet (only used by giftcode service)
-	app.Post("wallet/topup", handler.AddCredit)
 
 	err := godotenv.Load("./.env")
 	if err != nil {

@@ -2,19 +2,20 @@ package handler
 
 import (
 	"errors"
+	"log"
+	"strconv"
+	"time"
+
 	"github.com/AliasgharHeidari/wallet-v1/internal/model"
 	"github.com/AliasgharHeidari/wallet-v1/internal/repository/postgres"
 	"github.com/AliasgharHeidari/wallet-v1/internal/service"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
-	"log"
-	"strconv"
-	"time"
 )
 
 func CreateAccount(c *fiber.Ctx) error {
 	StringNumber := c.Params("number")
-
+	log.Println("11aa1")
 	if len(StringNumber) > 16 || len(StringNumber) < 8 {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "the Number most be between 8-16 characters",
@@ -100,12 +101,13 @@ func Transaction(c *fiber.Ctx) error {
 }
 
 func AddCredit(c *fiber.Ctx) error {
-
+	log.Println("111")
 	var wallet model.Wallet
 	var wal model.Wallet
 	var amount float64 = 1000000
 	err := c.BodyParser(&wallet)
 	if err != nil {
+		log.Println(err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "invalid request body",
 		})
@@ -124,7 +126,8 @@ func AddCredit(c *fiber.Ctx) error {
 		wal.Balance += amount
 		err := DB.Save(&wal).Error
 		if err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			log.Println(err)
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"error": "internal server error",
 			})
 		}
