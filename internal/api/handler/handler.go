@@ -147,3 +147,30 @@ func AddCredit(c *fiber.Ctx) error {
 		"current balance": wal.Balance,
 	})
 }
+
+func DeleteWallet(c *fiber.Ctx) error {
+	var input model.Wallet
+	err := c.BodyParser(&input)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "invalid body request. must be {mobile_number : (int)}",
+		})
+	}
+
+	err = service.DeleteWallet(input)
+	if errors.Is(err, service.ErrInternal) {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "internal error, please try again later",
+		})
+	}
+	if errors.Is(err, service.ErrNotFound) {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"error": "No wallet found",
+		})
+	}
+
+	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
+		"message": "wallet has been deleted successfuly",
+		"deleted-at" : time.Now(),
+	})
+}

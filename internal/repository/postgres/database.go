@@ -1,12 +1,13 @@
 package postgres
 
 import (
+	"github.com/AliasgharHeidari/wallet-v1/config"
 	"github.com/AliasgharHeidari/wallet-v1/internal/model"
-	"github.com/joho/godotenv"
+
+	"log"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
-	"os"
 )
 
 var (
@@ -14,12 +15,8 @@ var (
 	DB  *gorm.DB
 )
 
-func InitDB() {
-
-	if err := godotenv.Load("./.env"); err != nil {
-		panic(err)
-	}
-	dsn := os.Getenv("DSN")
+func InitDB(cfg config.Database) {
+	dsn := cfg.DSN.String()
 
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -29,14 +26,17 @@ func InitDB() {
 }
 
 func AutoMigrate() {
+
 	err := DB.AutoMigrate(&model.Wallet{})
 	if err != nil {
 		panic(err)
 	}
+
 	err = DB.AutoMigrate(&model.Transaction{})
 	if err != nil {
 		panic(err)
 	}
+
 }
 
 func GetDB() *gorm.DB {
@@ -49,4 +49,5 @@ func GetWalletInfo(number string) (model.Wallet, error) {
 		return model.Wallet{}, err
 	}
 	return wallet, nil
+
 }

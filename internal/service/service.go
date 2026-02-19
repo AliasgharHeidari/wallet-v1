@@ -6,6 +6,8 @@ import (
 
 	"github.com/AliasgharHeidari/wallet-v1/internal/model"
 	"github.com/AliasgharHeidari/wallet-v1/internal/repository/postgres"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 var (
@@ -80,6 +82,37 @@ func CreateAccount(number int) error {
 	if err != nil {
 		log.Println(err)
 		return err
+	}
+
+	return nil
+}
+
+func DeleteWallet(input model.Wallet) error {
+	DB := postgres.GetDB()
+
+	tx := DB.Begin()
+	var count model.Wallet
+
+	result := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Where("mobile_number = ?", input.MobileNumber).First(&count)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		tx.Rollback()
+		return ErrNotFound
+	}
+
+	if result.Error != nil {
+		tx.Rollback()
+		return ErrInternal
+	}
+	
+	result = tx.Model(&model.Wallet{}).Where("mobile_number = ?", input.MobileNumber).Delete(&model.Wallet{})
+	if result.Error != nil {
+		tx.Rollback()
+		return ErrInternal
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		tx.Rollback()
+		return ErrInternal
 	}
 
 	return nil
